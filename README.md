@@ -31,3 +31,4 @@ Make regular backups because there's barely any.
 ## To Do
 
 - Security
+- Graphing
