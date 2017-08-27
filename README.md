@@ -1,4 +1,4 @@
-# chronologicon
+# Chronologicon
 
 A very basic time tracker.
 
