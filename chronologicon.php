@@ -1,6 +1,6 @@
 <?php 
 
-    // I've obfuscated passwords and usernames.
+    // I've redacted sensitive data.
 
     $m_disc_u = $_POST['disc'];
     $m_proj_u = $_POST['proj'];
@@ -12,6 +12,8 @@
     $user = "XXXXXX";
     $pass = "XXXXXX";
     $data = "XXXXXX";
+
+    $m_md5 = "XXXXXX"; // I actually don't know why I do it like this.
 
     // Remove HTML tags for security, then lowercase everything for consistency.
     $m_disc = strtolower(strip_tags($m_disc_u));
@@ -26,8 +28,7 @@
 
         if(is_numeric($m_date) && is_numeric($m_hour)) { // HTML doesn't have a convenient cross-browser numeric-only form field, so I'm just using text inputs and verifying that the values are numeric here.
                 
-            if($m_pass === "cea596a386909fb7dbc8f0bc53d6f41d") { // Check the MD5'd password against what it should be. Again, this is so, so dumb, but it's quick and I don't care.
-            // The MD5 above has been changed from what it is on the live site, but I didn't redact it totally so you can still see what it should look like.
+            if($m_pass === $m_md5) { // Check the MD5'd password against what it should be. Again, this is so, so dumb, but it's quick and I don't care.
                 
                 $conn = new mysqli($serv, $user, $pass, $data);
                 
