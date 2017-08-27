@@ -18,11 +18,11 @@ The &lt;form&gt; element's "action" needs to point to wherever *chronologicon.ph
 
 *chronologicon.php* has a few things which you'll need to change:
 
-$serv: your database server location (probably localhost, but maybe not)
-$user: your database username
-$pass: your database password
-$data: your database
-$m_md5: [md5 hash](http://www.miraclesalad.com/webtools/md5.php) of your desired password
+- $serv: your database server location (probably localhost, but maybe not)
+- $user: your database username
+- $pass: your database password
+- $data: your database
+- $m_md5: [md5 hash](http://www.miraclesalad.com/webtools/md5.php) of your desired password
 
 ## Security
 
@@ -30,4 +30,4 @@ Make regular backups because there's barely any.
 
 ## To Do
 
-Security.
+- Security
