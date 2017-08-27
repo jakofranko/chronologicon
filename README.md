@@ -6,9 +6,11 @@ Dates are stored as integers using unhyphenated [Universal Standard Date Format]
 
 ## Setup
 
-To use Chronologicon on your own site, you'll need a MySQL database table with 5 columns.
+To use Chronologicon on your own site *as is,* you'll need a MySQL database table with 5 columns.
 
 log (unique int autoincrement) | discipline (text) | project (text) | date (int) | hour (int)
+
+Alternatively you can use a different setup, but you'll need to make some changes to *chronologicon.php*.
 
 *new.html* is a snippet, not an entire file. Paste the contents of it into the &lt;body&gt; of whichever page you want to input data from. Mine is [chronologicon/new](http://craze.co.uk/chronologicon/new). If you're already using jQuery, you can omit the reference to that. Otherwise, you'll need to change the link to reference jQuery on your own site.
 
