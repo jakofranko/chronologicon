@@ -34,3 +34,7 @@ Make regular backups because there's barely any.
 ## To Do
 
 - Security
+
+## Note
+
+I am well aware that my code is bad. If you can think of a solution or improvement and can find a way of telling me without being annoying about it, please do.
