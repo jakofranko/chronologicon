@@ -1,0 +1,98 @@
+<!-- This is a snippet, not an entire page. It contains the HTML DOM elements and JavaScript required to display Chronologicon data. -->
+
+<!-- AJAX uses jQuery, but nothing else on the site does, so it's only loaded on this page from within the body. This is absolutely not the best way to solve this problem. -->
+<script type="text/javascript" src="/jquery.js"></script>
+
+Disciplines
+<ul id="chron_graph_disciplines" class="chron_bar"></ul>
+
+Projects
+<ul id="chron_graph_projects" class="chron_bar"></ul>
+
+<script type="text/javascript">
+
+    window.onload = LoadChron();
+
+    function LoadChron() {
+            
+        $.ajax({
+            url: '/chron_display.php',
+            type: 'GET',
+            success: function(output)
+            {
+                var data = JSON.parse(output);
+                var print = "";
+                
+                var disc = [];
+                var proj = [];
+                var date = [];
+                var hour = [];
+                
+                print += data.length + " Logs for ";
+                
+                for (var i = 0; i < data.length; i++) {
+                    var subs = data[i].split(", ");
+                    disc[i] = subs[0];
+                    proj[i] = subs[1];
+                    date[i] = subs[2];
+                    hour[i] = subs[3];
+                }
+                
+                // Populate disciplines graph.
+                var disc_graph = document.getElementById('chron_graph_disciplines');
+                var disc_sort = SortArray(disc);
+                var disc_block = 1 / disc_sort[1].reduce(Add, 0);
+                var disc_last = 0;
+                for (var i = 0; i < disc_sort[1].length; i ++) {
+                    var percent = disc_block * 100 * disc_sort[1][i];
+                    disc_graph.innerHTML += "<a><li style='width: " + percent + "%; left: " + disc_last + "%;' class='graph_" + i + "'>" + disc_sort[0][i] + "<span class='chron_detail'> " + disc_sort[1][i] + "</span></li></a>";
+                    disc_last += percent;
+                }
+                
+                // Populate projects graph.
+                var proj_graph = document.getElementById('chron_graph_projects');
+                var proj_sort = SortArray(proj);
+                var proj_block = 1 / proj_sort[1].reduce(Add, 0);
+                var proj_last = 0;
+                for (var i = 0; i < proj_sort[1].length; i ++) {
+                    var percent = proj_block * 100 * proj_sort[1][i];
+                    proj_graph.innerHTML += "<a><li style='width: " + percent + "%; left: " + proj_last + "%;' class='graph_" + i + "' id='" + proj_sort[0][i] + "'>" + proj_sort[0][i] + "<span class='chron_detail'> " + proj_sort[1][i] + "</span></li></a>";
+                    proj_last += percent;
+                }
+                
+                var num_days = SortArray(date)[0].length;
+                var num_proj = SortArray(proj)[0].length;
+                
+                print += num_proj + " projects over "
+                print += num_days + " days";
+                
+                // Print log number
+                document.getElementById('chron_output').innerHTML = print;
+                
+            }               
+        });
+    };
+    
+    function SortArray(arr) {
+        var a = [], b = [], prev;
+    
+        arr.sort();
+        for ( var i = 0; i < arr.length; i++ ) {
+            if ( arr[i] !== prev ) {
+                a.push(arr[i]);
+                b.push(1);
+            } else {
+                b[b.length-1]++;
+            }
+            prev = arr[i];
+        }
+
+        return [a, b];
+    }
+    
+    function Add(a, b) {
+        return a + b;
+    }
+</script>
+
+<div id="chron_output" class="chron_small"></div>
