@@ -10,6 +10,8 @@ Projects
 <ul id="chron_graph_projects" class="chron_bar"></ul>
 
 <script type="text/javascript">
+    
+    // This script is a little on the complicated side.
 
     window.onload = LoadChron();
 
@@ -20,9 +22,13 @@ Projects
             type: 'GET',
             success: function(output)
             {
+                // Grab those data from the chron_display.php file.
                 var data = JSON.parse(output);
+                
+                // Set up a pseudoconsole.
                 var print = "";
                 
+                // Arrays of every entry for each column.
                 var disc = [];
                 var proj = [];
                 var date = [];
@@ -30,6 +36,7 @@ Projects
                 
                 print += data.length + " Logs for ";
                 
+                // The JSON input is a single array where each element is a row. Now we split each row and add each element of it to the correct javascript array. The data are arranged so that each array is a column, and each element within the arrays is a row.
                 for (var i = 0; i < data.length; i++) {
                     var subs = data[i].split(", ");
                     disc[i] = subs[0];
@@ -38,41 +45,54 @@ Projects
                     hour[i] = subs[3];
                 }
                 
-                // Populate disciplines graph.
+                // This is a graph of disciplines. It'll populate an existing <ul> with <li> elements, with each one's width being specified as an accurate percentage. Display them inline-block with no margin, and they should take up exactly 100% of their parent element.
                 var disc_graph = document.getElementById('chron_graph_disciplines');
+                // Sort disciplines into two arrays, one for the discipline and another for its frequency
                 var disc_sort = SortArray(disc);
+                // Work out what one log is equal to, as a percentage of all the work logged.
                 var disc_block = 1 / disc_sort[1].reduce(Add, 0);
+                
+                // Offset from the left hand side for each <li>, based on the width of the previous one.
                 var disc_last = 0;
+                
+                // For each distinct discipline:
                 for (var i = 0; i < disc_sort[1].length; i ++) {
+                    // How big the bar should be, as a percentage
                     var percent = disc_block * 100 * disc_sort[1][i];
-                    disc_graph.innerHTML += "<a><li style='width: " + percent + "%; left: " + disc_last + "%;' class='graph_" + i + "'>" + disc_sort[0][i] + "<span class='chron_detail'> " + disc_sort[1][i] + "</span></li></a>";
+                    // Find the graph element. Add a list item. Set its left offset so it lines up right. Give it a class which is unique to this graph, but common amongst all graphs, where it can get its colours. Give it a label. Add a span so we can style the number of hours differently. Add the number of hours for this discipline to that span. Close the elements. Phew.
+                    disc_graph.innerHTML += "<li style='width: " + percent + "%; left: " + disc_last + "%;' class='graph_" + i + "'>" + disc_sort[0][i] + "<span class='chron_detail'> " + disc_sort[1][i] + "</span></li>";
+                    // Increment this variable so the next element along can be positioned correctly (running total of all previous elements' widths becomes next element's left offset)
                     disc_last += percent;
                 }
                 
-                // Populate projects graph.
+                // Same again, but for projects.
                 var proj_graph = document.getElementById('chron_graph_projects');
                 var proj_sort = SortArray(proj);
                 var proj_block = 1 / proj_sort[1].reduce(Add, 0);
                 var proj_last = 0;
                 for (var i = 0; i < proj_sort[1].length; i ++) {
                     var percent = proj_block * 100 * proj_sort[1][i];
-                    proj_graph.innerHTML += "<a><li style='width: " + percent + "%; left: " + proj_last + "%;' class='graph_" + i + "' id='" + proj_sort[0][i] + "'>" + proj_sort[0][i] + "<span class='chron_detail'> " + proj_sort[1][i] + "</span></li></a>";
+                    proj_graph.innerHTML += "<li style='width: " + percent + "%; left: " + proj_last + "%;' class='graph_" + i + "' id='" + proj_sort[0][i] + "'>" + proj_sort[0][i] + "<span class='chron_detail'> " + proj_sort[1][i] + "</span></li>";
                     proj_last += percent;
                 }
                 
+                // Get the number of unique projects and unique days, because there will likely be multiple entries.
                 var num_days = SortArray(date)[0].length;
                 var num_proj = SortArray(proj)[0].length;
                 
+                // Add number of things to the pseudoconsole
                 print += num_proj + " projects over "
                 print += num_days + " days";
                 
-                // Print log number
+                // Output pseudoconsole to an element.
                 document.getElementById('chron_output').innerHTML = print;
                 
             }               
         });
     };
     
+    
+    // I love this function so much, I wish I had written it.
     function SortArray(arr) {
         var a = [], b = [], prev;
     
@@ -90,6 +110,7 @@ Projects
         return [a, b];
     }
     
+    // Yes.
     function Add(a, b) {
         return a + b;
     }
